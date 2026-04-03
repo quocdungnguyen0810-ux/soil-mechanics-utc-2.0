@@ -96,7 +96,7 @@ export function TheoryModule({ chapterId }: TheoryModuleProps) {
               chapterId={chapter.id}
               chapterNumber={chapter.chapterNumber}
               chapterTitle={chapter.title}
-              slideFile={undefined} // TODO: set to 'ch1.pdf' etc. after upload
+              slideFile={`ch${chapter.chapterNumber}.pdf`}
             />
             {/* Illustration reference */}
             <div className="glass-card">
