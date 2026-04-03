@@ -12,7 +12,7 @@ export function ExerciseModule() {
 
   const chapter = allChapters.find(ch => ch.id === selectedChapterId) || allChapters[0];
   const allExercises = getExercisesByChapter(chapter.id);
-  const hasMissing = chaptersMissingExercises.includes(chapter.id);
+  const hasMissing = (chaptersMissingExercises as string[]).includes(chapter.id);
 
   const filteredExercises = allExercises.filter(ex => {
     if (difficultyFilter === 'all') return true;

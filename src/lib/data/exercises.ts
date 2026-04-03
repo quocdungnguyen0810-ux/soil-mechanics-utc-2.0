@@ -192,4 +192,4 @@ export function getExerciseById(id: string): Exercise | undefined {
 export const chaptersWithExercises = ['ch1', 'ch2', 'ch3', 'ch4', 'ch5', 'ch6', 'ch7'];
 
 // Chapters missing exercises
-export const chaptersMissingExercises = [];
+export const chaptersMissingExercises: string[] = [];
