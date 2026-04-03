@@ -8,8 +8,10 @@ import { FormulaBlock } from '@/components/content/FormulaBlock';
 import { ContentRenderer } from '@/components/content/ContentRenderer';
 import { QuizSection } from '@/components/QuizSection';
 import { Chapter, ChapterSection } from '@/types';
+import { SlideViewer } from '@/components/lectures/SlideViewer';
+import { ChapterIllustration } from '@/components/illustrations/ChapterIllustrations';
 
-type Tab = 'overview' | 'content' | 'formulas' | 'examples' | 'quiz' | 'exercises';
+type Tab = 'overview' | 'content' | 'formulas' | 'examples' | 'quiz' | 'exercises' | 'lecture';
 
 interface TheoryModuleProps {
   chapterId: string;
@@ -25,13 +27,14 @@ export function TheoryModule({ chapterId }: TheoryModuleProps) {
   const exercises = getExercisesByChapter(chapter.id);
   const isCompleted = progress.completedChapters.includes(chapter.id);
 
-  const tabs: { key: Tab; label: string; count?: number }[] = [
-    { key: 'overview', label: 'Tổng quan' },
-    { key: 'content', label: 'Nội dung chi tiết', count: chapter.detailedSummary.length },
-    { key: 'formulas', label: 'Công thức', count: chapter.formulas.length },
-    { key: 'examples', label: 'Ví dụ', count: chapter.workedExamples.length },
-    { key: 'quiz', label: 'Trắc nghiệm', count: chapter.quizzes.length },
-    { key: 'exercises', label: 'Bài tập', count: exercises.length },
+  const tabs: { key: Tab; label: string; icon: string; count?: number }[] = [
+    { key: 'overview', label: 'Tổng quan', icon: '📋' },
+    { key: 'content', label: 'Nội dung', icon: '📑', count: chapter.detailedSummary.length },
+    { key: 'formulas', label: 'Công thức', icon: '📐', count: chapter.formulas.length },
+    { key: 'examples', label: 'Ví dụ', icon: '📝', count: chapter.workedExamples.length },
+    { key: 'quiz', label: 'Trắc nghiệm', icon: '❓', count: chapter.quizzes.length },
+    { key: 'exercises', label: 'Bài tập', icon: '✏️', count: exercises.length },
+    { key: 'lecture', label: 'Bài giảng', icon: '📽️' },
   ];
 
   return (
@@ -59,15 +62,20 @@ export function TheoryModule({ chapterId }: TheoryModuleProps) {
 
       {/* Tabs */}
       <div className="flex gap-1 mb-6 overflow-x-auto pb-2 no-print">
-        {tabs.map(({ key, label, count }) => (
+        {tabs.map(({ key, label, icon, count }) => (
           <button
             key={key}
             onClick={() => setActiveTab(key)}
-            className={`tab-btn whitespace-nowrap ${activeTab === key ? 'active' : ''}`}
+            className={`tab-btn whitespace-nowrap flex items-center gap-1.5 ${
+              activeTab === key ? 'active' : ''
+            } ${
+              key === 'lecture' ? 'border border-indigo-500/20 text-indigo-300' : ''
+            }`}
           >
+            <span>{icon}</span>
             {label}
             {count !== undefined && count > 0 && (
-              <span className="ml-1.5 text-xs opacity-60">({count})</span>
+              <span className="ml-0.5 text-xs opacity-60">({count})</span>
             )}
           </button>
         ))}
@@ -81,6 +89,23 @@ export function TheoryModule({ chapterId }: TheoryModuleProps) {
         {activeTab === 'quiz' && <QuizSection chapter={chapter} />}
         {activeTab === 'exercises' && (
           <ExercisesTab exercises={exercises} chapterNumber={chapter.chapterNumber} />
+        )}
+        {activeTab === 'lecture' && (
+          <div className="space-y-6">
+            <SlideViewer
+              chapterId={chapter.id}
+              chapterNumber={chapter.chapterNumber}
+              chapterTitle={chapter.title}
+              slideFile={undefined} // TODO: set to 'ch1.pdf' etc. after upload
+            />
+            {/* Illustration reference */}
+            <div className="glass-card">
+              <h3 className="font-display font-semibold text-base mb-3 flex items-center gap-2">
+                📐 Hình vẽ kỹ thuật tham khảo
+              </h3>
+              <ChapterIllustration chapterId={chapter.id} />
+            </div>
+          </div>
         )}
       </div>
     </div>
@@ -102,6 +127,9 @@ function NoChapter() {
 function OverviewTab({ chapter }: { chapter: Chapter }) {
   return (
     <div className="space-y-6">
+      {/* Technical Illustration */}
+      <ChapterIllustration chapterId={chapter.id} />
+
       {/* Learning objectives */}
       <div className="glass-card">
         <h3 className="font-display font-semibold text-lg mb-4 flex items-center gap-2">
