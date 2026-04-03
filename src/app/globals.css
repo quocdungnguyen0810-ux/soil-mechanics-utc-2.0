@@ -206,8 +206,75 @@ body {
   }
 }
 
-/* KaTeX style overrides */
-.katex { font-size: 1.1em; color: var(--accent-cyan); }
+/* ===== KaTeX — MathType-quality formula rendering ===== */
+.katex {
+  font-size: 1.15em;
+  color: #e2e8f0;
+  letter-spacing: 0.01em;
+}
+
+/* Display mode formula block — centered, prominent */
+.katex-display-wrapper {
+  padding: 1.25rem 1.5rem;
+  border-radius: 0.75rem;
+  background: linear-gradient(135deg, rgba(6, 182, 212, 0.03), rgba(168, 85, 247, 0.02));
+  border: 1px solid rgba(6, 182, 212, 0.1);
+  text-align: center;
+  overflow-x: auto;
+  transition: all 0.3s ease;
+}
+
+.katex-display-wrapper .katex {
+  font-size: 1.5em;
+  color: #f1f5f9;
+}
+
+.katex-display-wrapper .katex-display {
+  margin: 0;
+  padding: 0.25rem 0;
+}
+
+/* Fractions — bigger numerator/denominator for readability */
+.katex .frac-line {
+  border-bottom-color: rgba(226, 232, 240, 0.6);
+}
+
+/* Inline LaTeX — blend with text */
+.katex-inline .katex {
+  font-size: 1.05em;
+  color: #93c5fd;
+}
+
+/* Error styling */
+.katex-error,
+.katex-fallback {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85em;
+  color: var(--accent-rose);
+  background: rgba(244, 63, 94, 0.06);
+  padding: 0.15em 0.5em;
+  border-radius: 0.25rem;
+  border: 1px solid rgba(244, 63, 94, 0.1);
+}
+
+/* Formula block variable table */
+.formula-variables {
+  padding-top: 0.75rem;
+  margin-top: 0.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* Formula display area glow on hover */
+.formula-display:hover .katex-display-wrapper {
+  border-color: rgba(6, 182, 212, 0.25);
+  box-shadow: 0 0 20px rgba(6, 182, 212, 0.08), 0 0 40px rgba(168, 85, 247, 0.04);
+  background: linear-gradient(135deg, rgba(6, 182, 212, 0.05), rgba(168, 85, 247, 0.03));
+}
+
+/* Prose content (inner ContentRenderer) */
+.prose-content p {
+  margin-bottom: 0.25rem;
+}
 
 /* Print styles */
 @media print {

@@ -67,6 +67,7 @@ export const useAppStore = create<AppStore>()(
         completedLabs: [],
         bookmarkedFormulas: [],
         bookmarkedExamples: [],
+        bookmarkedMaterials: [],
         quizScores: {},
       },
 

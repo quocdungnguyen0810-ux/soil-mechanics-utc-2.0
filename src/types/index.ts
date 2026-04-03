@@ -10,6 +10,9 @@ export interface SourceRef {
   confidence: 'high' | 'medium' | 'low';
 }
 
+export type QuestionType = 'multiple-choice' | 'true-false' | 'fill-blank' | 'short-answer' | 'calculation';
+export type DifficultyLevel = 'nhận biết' | 'thông hiểu' | 'vận dụng' | 'vận dụng cao';
+
 // ---- DETAILED CHAPTER STRUCTURE ----
 
 export interface ChapterSection {
@@ -93,12 +96,13 @@ export interface ReviewQuestion {
 export interface Quiz {
   id: string;
   chapterId: string;
-  type: 'multiple-choice' | 'true-false' | 'short-answer';
-  difficulty: 'nhận biết' | 'thông hiểu' | 'vận dụng';
+  type: QuestionType;
+  difficulty: DifficultyLevel;
   question: string;
   options?: string[];
   correctAnswer: string;
   explanation?: string;
+  tags?: string[];
   sourceRefs: SourceRef[];
 }
 
@@ -111,6 +115,9 @@ export interface Exercise {
   hint?: string;
   answer?: string;
   explanation?: string;
+  difficulty?: DifficultyLevel;
+  tags?: string[];
+  solutionSteps?: string[];
   hasDetailedSolution: boolean;
   sourceRefs: SourceRef[];
 }
@@ -225,9 +232,27 @@ export interface LabReportSection {
   remarks: string;
 }
 
+// ---- MATERIALS ----
+
+export type MaterialType = 'textbook' | 'slide' | 'reference' | 'past-exam' | 'exercise-set' | 'chart' | 'standard';
+
+export interface Material {
+  id: string;
+  title: string;
+  type: MaterialType;
+  chapterId?: string;        // links to a specific chapter, or null for general
+  description: string;
+  author?: string;
+  year?: number;
+  pages?: string;            // e.g. "tr. 45-78"
+  tags: string[];
+  importance: 'essential' | 'recommended' | 'supplementary';
+  source?: string;           // publisher or origin
+}
+
 // ---- APP ----
 
-export type AppMode = 'theory' | 'exercises' | 'labs' | 'reports';
+export type AppMode = 'theory' | 'exercises' | 'labs' | 'reports' | 'materials';
 
 export interface UserProgress {
   completedChapters: string[];
@@ -235,5 +260,6 @@ export interface UserProgress {
   completedLabs: string[];
   bookmarkedFormulas: string[];
   bookmarkedExamples: string[];
+  bookmarkedMaterials: string[];
   quizScores: Record<string, number>;
 }
