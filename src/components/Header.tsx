@@ -7,17 +7,17 @@ import { useAppStore } from '@/store/useAppStore';
 import { useAuthStore } from '@/store/useAuthStore';
 import { ROLE_CONFIG } from '@/types/auth';
 
-const modeLabels: Record<string, string> = {
-  dashboard: 'Tổng quan',
-  theory: 'Học theo chương',
-  exercises: 'Bài tập',
-  exam: 'Thi thử trắc nghiệm',
-  flashcard: 'Ôn tập Flashcard',
-  materials: 'Tài liệu tham khảo',
-  labs: 'Thí nghiệm',
-  reports: 'Báo cáo thí nghiệm',
-  'question-bank': 'Ngân hàng câu hỏi',
-  admin: 'Quản lý hệ thống',
+const modeLabels: Record<string, { title: string; sub: string }> = {
+  dashboard: { title: 'Tổng quan', sub: 'Cơ học đất — Học phần 2TC' },
+  theory:    { title: 'Học theo chương', sub: 'Lý thuyết & Công thức' },
+  exercises: { title: 'Bài tập', sub: 'Luyện tập & Kiểm tra' },
+  exam:      { title: 'Thi thử', sub: 'Trắc nghiệm tổng hợp' },
+  flashcard: { title: 'Ôn tập Flashcard', sub: 'Ghi nhớ nhanh' },
+  materials: { title: 'Tài liệu tham khảo', sub: 'Giáo trình & Slide' },
+  labs:      { title: 'Thí nghiệm', sub: 'Thực hành & Báo cáo' },
+  reports:   { title: 'Báo cáo thí nghiệm', sub: 'Lập báo cáo tự động' },
+  'question-bank': { title: 'Ngân hàng câu hỏi', sub: 'Quản lý đề thi' },
+  admin:     { title: 'Quản lý hệ thống', sub: 'Admin panel' },
 };
 
 export function Header() {
@@ -25,87 +25,103 @@ export function Header() {
   const { searchQuery, setSearchQuery, progress } = useAppStore();
   const { user, isAuthenticated, initialize, logoutUser } = useAuthStore();
 
-  // Initialize auth on mount
-  useEffect(() => {
-    initialize();
-  }, [initialize]);
+  useEffect(() => { initialize(); }, [initialize]);
 
-  // Detect mode from URL
-  const currentMode = pathname?.startsWith('/dashboard')
-    ? 'dashboard'
-    : pathname?.startsWith('/chapters')
-      ? 'theory'
-      : pathname?.startsWith('/exercises')
-        ? 'exercises'
-        : pathname?.startsWith('/exam')
-          ? 'exam'
-          : pathname?.startsWith('/flashcard')
-            ? 'flashcard'
-            : pathname?.startsWith('/materials')
-              ? 'materials'
-              : pathname?.startsWith('/labs')
-                ? 'labs'
-                : pathname?.startsWith('/reports')
-                  ? 'reports'
-                  : pathname?.startsWith('/question-bank')
-                    ? 'question-bank'
-                    : pathname?.startsWith('/admin')
-                      ? 'admin'
-                      : 'dashboard';
+  const currentMode = Object.entries({
+    dashboard: '/dashboard',
+    theory: '/chapters',
+    exercises: '/exercises',
+    exam: '/exam',
+    flashcard: '/flashcard',
+    materials: '/materials',
+    labs: '/labs',
+    reports: '/reports',
+    'question-bank': '/question-bank',
+    admin: '/admin',
+  }).find(([, path]) => pathname?.startsWith(path))?.[0] ?? 'dashboard';
 
-  const handleLogout = async () => {
-    await logoutUser();
-  };
+  const modeInfo = modeLabels[currentMode];
 
   return (
-    <header className="h-16 glass border-b border-white/5 flex items-center justify-between px-6 no-print">
-      <div className="flex items-center gap-4">
-        <h2 className="font-display font-semibold text-lg">
-          {modeLabels[currentMode]}
-        </h2>
-        <div className="flex gap-2">
-          {progress.bookmarkedFormulas.length > 0 && (
-            <span className="badge-amber">
-              ⭐ {progress.bookmarkedFormulas.length} đánh dấu
-            </span>
-          )}
+    <header
+      className="h-16 flex items-center justify-between px-6 no-print"
+      style={{
+        background: 'linear-gradient(135deg, rgba(24,35,56,0.96), rgba(17,24,39,0.98))',
+        borderBottom: '1px solid rgba(212,160,23,0.1)',
+        backdropFilter: 'blur(20px)',
+        boxShadow: '0 1px 0 rgba(212,160,23,0.06)',
+      }}
+    >
+      {/* Left: page title */}
+      <div className="flex items-center gap-4 min-w-0">
+        <div className="min-w-0">
+          <div className="flex items-center gap-2">
+            <h2
+              className="font-display font-semibold text-base leading-tight truncate"
+              style={{ color: '#EEF2FF' }}
+            >
+              {modeInfo?.title ?? currentMode}
+            </h2>
+            {progress.bookmarkedFormulas.length > 0 && (
+              <span className="badge-amber shrink-0">
+                ★ {progress.bookmarkedFormulas.length}
+              </span>
+            )}
+          </div>
+          <p style={{ fontSize: '0.68rem', color: 'rgba(176,187,204,0.5)', fontWeight: 400, marginTop: 1 }}>
+            {modeInfo?.sub}
+          </p>
         </div>
       </div>
 
-      <div className="flex items-center gap-4">
+      {/* Center: search */}
+      <div className="flex-1 max-w-xs mx-6 hidden md:block">
         <div className="relative">
           <input
             type="text"
-            placeholder="Tìm kiếm..."
+            placeholder="Tìm kiếm nội dung..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="input-field w-64 pl-10 text-sm"
+            className="input-field w-full pl-9 text-sm"
+            style={{ fontSize: '0.8rem', height: 36, padding: '0 0.75rem 0 2.25rem' }}
           />
-          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-dark-400">
+          <span
+            className="absolute top-1/2 -translate-y-1/2"
+            style={{ left: 10, fontSize: '0.8rem', color: 'var(--text-muted)' }}
+          >
             🔍
           </span>
         </div>
+      </div>
 
-        {/* Auth section */}
+      {/* Right: user */}
+      <div className="flex items-center gap-3 shrink-0">
         {isAuthenticated && user ? (
           <div className="flex items-center gap-3">
             <div className="text-right hidden sm:block">
-              <p className="text-sm text-white font-medium leading-tight">{user.name}</p>
-              <span className={ROLE_CONFIG[user.role]?.badgeClass || 'badge-blue'}>
+              <p style={{ fontSize: '0.8rem', fontWeight: 600, color: '#EEF2FF', lineHeight: 1.3 }}>
+                {user.name}
+              </p>
+              <span className={ROLE_CONFIG[user.role]?.badgeClass || 'badge-blue'} style={{ fontSize: '0.65rem' }}>
                 {ROLE_CONFIG[user.role]?.icon} {ROLE_CONFIG[user.role]?.label}
               </span>
             </div>
-            <div className={`w-9 h-9 rounded-full flex items-center justify-center text-white text-sm font-bold shadow-lg ${
-              user.role === 'admin' ? 'bg-gradient-to-br from-rose-500 to-pink-600' :
-              user.role === 'moderator' ? 'bg-gradient-to-br from-amber-500 to-orange-600' :
-              user.role === 'teacher' ? 'bg-gradient-to-br from-purple-500 to-indigo-600' :
-              'bg-gradient-to-br from-primary-500 to-purple-500'
-            }`}>
+            <div
+              style={{
+                width: 36, height: 36,
+                borderRadius: '50%',
+                background: 'linear-gradient(135deg, var(--utc-navy-mid), var(--utc-gold))',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                color: '#111827', fontWeight: 800, fontSize: '0.85rem',
+                boxShadow: '0 0 0 2px rgba(212,160,23,0.3)',
+              }}
+            >
               {user.name.charAt(0).toUpperCase()}
             </div>
             <button
-              onClick={handleLogout}
-              className="text-xs text-dark-500 hover:text-red-400 transition-colors px-2 py-1"
+              onClick={logoutUser}
+              style={{ fontSize: '0.75rem', color: 'var(--text-muted)', padding: '4px 8px', borderRadius: 6 }}
+              className="hover:text-white transition-colors"
               title="Đăng xuất"
             >
               🚪
@@ -114,7 +130,16 @@ export function Header() {
         ) : (
           <Link
             href="/login"
-            className="px-4 py-2 rounded-lg bg-primary-600/20 border border-primary-500/30 text-primary-300 text-sm hover:bg-primary-600/30 transition-all"
+            style={{
+              padding: '6px 16px',
+              borderRadius: 8,
+              background: 'rgba(27,58,107,0.35)',
+              border: '1px solid rgba(212,160,23,0.25)',
+              color: 'var(--utc-gold-light)',
+              fontSize: '0.8rem',
+              fontWeight: 600,
+              transition: 'all 0.2s',
+            }}
           >
             Đăng nhập
           </Link>

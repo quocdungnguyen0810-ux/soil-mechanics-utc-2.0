@@ -28,13 +28,13 @@ export function TheoryModule({ chapterId }: TheoryModuleProps) {
   const isCompleted = progress.completedChapters.includes(chapter.id);
 
   const tabs: { key: Tab; label: string; icon: string; count?: number }[] = [
-    { key: 'overview', label: 'Tổng quan', icon: '📋' },
-    { key: 'content', label: 'Nội dung', icon: '📑', count: chapter.detailedSummary.length },
-    { key: 'formulas', label: 'Công thức', icon: '📐', count: chapter.formulas.length },
-    { key: 'examples', label: 'Ví dụ', icon: '📝', count: chapter.workedExamples.length },
-    { key: 'quiz', label: 'Trắc nghiệm', icon: '❓', count: chapter.quizzes.length },
-    { key: 'exercises', label: 'Bài tập', icon: '✏️', count: exercises.length },
-    { key: 'lecture', label: 'Bài giảng', icon: '📽️' },
+    { key: 'overview',  label: 'Tổng quan',    icon: '🏠' },
+    { key: 'content',   label: 'Nội dung',     icon: '📖', count: chapter.detailedSummary.length },
+    { key: 'lecture',   label: 'Bài giảng',    icon: '📽️' },
+    { key: 'formulas',  label: 'Công thức',    icon: 'Σ',  count: chapter.formulas.length },
+    { key: 'examples',  label: 'Ví dụ giải',  icon: '📝', count: chapter.workedExamples.length },
+    { key: 'quiz',      label: 'Trắc nghiệm', icon: '❓', count: chapter.quizzes.length },
+    { key: 'exercises', label: 'Bài tập',     icon: '✏️', count: exercises.length },
   ];
 
   return (
@@ -42,10 +42,12 @@ export function TheoryModule({ chapterId }: TheoryModuleProps) {
       {/* Chapter header */}
       <div className="mb-8">
         <div className="flex items-center gap-3 mb-2 flex-wrap">
-          <span className="badge-blue">Chương {chapter.chapterNumber}</span>
+          <span className="badge-utc">
+            🏛️ Chương {chapter.chapterNumber}
+          </span>
           {isCompleted && <span className="badge-green">✓ Hoàn thành</span>}
-          <span className="badge-purple">
-            Bao phủ: {Math.round(chapter.sourceCoverageOverall * 100)}%
+          <span className="badge-amber">
+            🎯 Phủ: {Math.round(chapter.sourceCoverageOverall * 100)}%
           </span>
         </div>
         <h1 className="font-display text-3xl font-bold mb-3">{chapter.title}</h1>
@@ -61,21 +63,34 @@ export function TheoryModule({ chapterId }: TheoryModuleProps) {
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-1 mb-6 overflow-x-auto pb-2 no-print">
+      <div
+        className="flex gap-1 mb-6 overflow-x-auto pb-1 no-print"
+        style={{
+          borderBottom: '1px solid rgba(59,100,200,0.12)',
+          paddingBottom: '1px',
+        }}
+      >
         {tabs.map(({ key, label, icon, count }) => (
           <button
             key={key}
             onClick={() => setActiveTab(key)}
             className={`tab-btn whitespace-nowrap flex items-center gap-1.5 ${
               activeTab === key ? 'active' : ''
-            } ${
-              key === 'lecture' ? 'border border-indigo-500/20 text-indigo-300' : ''
             }`}
           >
-            <span>{icon}</span>
+            <span style={{ fontSize: '0.8em' }}>{icon}</span>
             {label}
             {count !== undefined && count > 0 && (
-              <span className="ml-0.5 text-xs opacity-60">({count})</span>
+              <span
+                className="ml-0.5 text-xs"
+                style={{
+                  opacity: activeTab === key ? 0.8 : 0.5,
+                  background: activeTab === key ? 'rgba(200,150,12,0.15)' : 'transparent',
+                  padding: '0 4px', borderRadius: 8,
+                }}
+              >
+                {count}
+              </span>
             )}
           </button>
         ))}
@@ -294,12 +309,14 @@ function ContentTab({ chapter }: { chapter: Chapter }) {
         </div>
       </div>
 
-      {chapter.detailedSummary.map((section) => (
+      {chapter.detailedSummary.map((section, index) => (
         <SectionBlock
           key={section.id}
           section={section}
           expanded={expandedSections.has(section.id)}
           onToggle={() => toggle(section.id)}
+          chapterId={chapter.id}
+          sectionIndex={index}
         />
       ))}
     </div>
@@ -310,41 +327,93 @@ function SectionBlock({
   section,
   expanded,
   onToggle,
+  chapterId,
+  sectionIndex,
 }: {
   section: ChapterSection;
   expanded: boolean;
   onToggle: () => void;
+  chapterId?: string;
+  sectionIndex?: number;
 }) {
   return (
-    <div className="glass-card">
+    <div
+      className="glass-card"
+      style={{
+        borderLeft: '2px solid rgba(200,150,12,0.35)',
+        transition: 'border-color 0.2s',
+      }}
+    >
       <button
         onClick={onToggle}
-        className="w-full text-left flex items-center justify-between"
+        className="w-full text-left flex items-center justify-between gap-3"
       >
-        <h4 className="font-display font-semibold text-base">{section.title}</h4>
-        <span className="text-dark-400 text-lg">{expanded ? '▾' : '▸'}</span>
+        <div className="flex items-center gap-2 min-w-0">
+          <span
+            style={{
+              width: 24, height: 24,
+              borderRadius: 6,
+              background: 'rgba(200,150,12,0.12)',
+              border: '1px solid rgba(200,150,12,0.2)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontSize: '0.7rem', fontWeight: 700, color: 'rgba(240,180,40,0.8)',
+              flexShrink: 0,
+            }}
+          >
+            {(sectionIndex ?? 0) + 1}
+          </span>
+          <h4 className="font-display font-semibold text-base truncate">{section.title}</h4>
+        </div>
+        <span style={{ color: 'rgba(200,150,12,0.6)', fontSize: '1rem', flexShrink: 0 }}>
+          {expanded ? '▾' : '▸'}
+        </span>
       </button>
+
       {expanded && (
-        <div className="mt-4 animate-fade-in">
-          {/* Use ContentRenderer for rich content with inline LaTeX */}
+        <div className="mt-4 animate-fade-in space-y-4">
+          {/* Illustration for first 2 sections of each chapter */}
+          {chapterId && sectionIndex !== undefined && sectionIndex < 2 && (
+            <ChapterIllustration chapterId={chapterId} compact />
+          )}
+
+          {/* Content */}
           <ContentRenderer content={section.content} />
 
+          {/* Inline formulas */}
           {section.formulas && section.formulas.length > 0 && (
-            <div className="mt-4 space-y-3">
+            <div className="space-y-3">
               {section.formulas.map((f) => (
                 <FormulaBlock key={f.id} formula={f} compact />
               ))}
             </div>
           )}
 
+          {/* Notes */}
           {section.notes && section.notes.length > 0 && (
-            <div className="mt-3 p-3 rounded-lg bg-cyan-500/5 border border-cyan-500/20">
+            <div
+              className="p-3 rounded-lg space-y-1"
+              style={{
+                background: 'rgba(200,150,12,0.04)',
+                border: '1px solid rgba(200,150,12,0.15)',
+                borderLeft: '3px solid rgba(200,150,12,0.5)',
+              }}
+            >
+              <p style={{ fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.08em', color: 'rgba(200,150,12,0.6)', fontWeight: 700, marginBottom: 4 }}>
+                📌 Ghi chú
+              </p>
               {section.notes.map((n, i) => (
-                <p key={i} className="text-xs text-cyan-300">
-                  📌 {n}
+                <p key={i} className="text-xs" style={{ color: '#c8960c' }}>
+                  ▸ {n}
                 </p>
               ))}
             </div>
+          )}
+
+          {/* Source reference */}
+          {section.sourceRef && (
+            <p style={{ fontSize: '0.65rem', color: 'rgba(91,110,153,0.6)', marginTop: 4 }}>
+              📄 {section.sourceRef.fileName}
+            </p>
           )}
         </div>
       )}

@@ -87,25 +87,57 @@ export function Sidebar() {
 
   return (
     <aside
-      className={`fixed left-0 top-0 h-full glass border-r border-white/5 z-20 transition-all duration-300 flex flex-col ${
+      className={`fixed left-0 top-0 h-full z-20 transition-all duration-300 flex flex-col ${
         sidebarOpen ? 'w-72' : 'w-16'
       }`}
+      style={{
+        background: 'linear-gradient(180deg, #182338 0%, #111827 100%)',
+        borderRight: '1px solid rgba(212,160,23,0.1)',
+        boxShadow: '4px 0 24px rgba(0,0,0,0.3)',
+      }}
     >
-      {/* Logo */}
-      <div className="p-4 border-b border-white/5 flex items-center gap-3">
+      {/* UTC Logo */}
+      <div
+        style={{
+          padding: '1rem',
+          borderBottom: '1px solid rgba(212,160,23,0.1)',
+          display: 'flex', alignItems: 'center', gap: '0.75rem',
+          background: 'linear-gradient(135deg, rgba(27,58,107,0.5), rgba(24,35,56,0.8))',
+        }}
+      >
         <button
           onClick={toggleSidebar}
-          className="text-2xl hover:scale-110 transition-transform"
-          title="Toggle sidebar"
+          style={{
+            width: 38, height: 38, borderRadius: 10,
+            background: 'linear-gradient(135deg, #1B3A6B, #254d8f)',
+            border: '1px solid rgba(212,160,23,0.3)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            fontSize: '1.1rem', cursor: 'pointer', flexShrink: 0,
+            boxShadow: '0 2px 12px rgba(27,58,107,0.4)',
+            transition: 'all 0.2s',
+          }}
+          title="Thu/mở menu"
         >
-          🏗️
+          🎓
         </button>
         {sidebarOpen && (
-          <div className="animate-fade-in">
-            <h1 className="font-display font-bold text-lg gradient-text">
-              Cơ Học Đất
+          <div className="animate-fade-in min-w-0">
+            <h1
+              style={{
+                fontFamily: "'Outfit', sans-serif",
+                fontWeight: 800,
+                fontSize: '1rem',
+                background: 'linear-gradient(135deg, #EBB83A, #F5D878)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+                letterSpacing: '0.03em',
+                lineHeight: 1.2,
+              }}
+            >
+              CƠ HỌC ĐẤT
             </h1>
-            <p className="text-[10px] text-dark-400 tracking-wider">
+            <p style={{ fontSize: '0.6rem', color: 'rgba(176,187,204,0.55)', letterSpacing: '0.12em', marginTop: 2, fontWeight: 500 }}>
               ĐH GIAO THÔNG VẬN TẢI
             </p>
           </div>
@@ -113,7 +145,7 @@ export function Sidebar() {
       </div>
 
       {/* Main Navigation */}
-      <div className="p-3 border-b border-white/5">
+      <div style={{ padding: '0.75rem', borderBottom: '1px solid rgba(212,160,23,0.06)' }}>
         {mainNav.map(({ path, label, icon }) => {
           const isActive =
             path === '/chapters'
@@ -126,8 +158,8 @@ export function Sidebar() {
               href={path === '/chapters' ? '/chapters/ch1' : path}
               className={`sidebar-item w-full ${isActive ? 'active' : ''}`}
             >
-              <span className="text-lg">{icon}</span>
-              {sidebarOpen && <span>{label}</span>}
+              <span style={{ fontSize: '1rem', width: 20, textAlign: 'center', flexShrink: 0 }}>{icon}</span>
+              {sidebarOpen && <span style={{ fontSize: '0.85rem' }}>{label}</span>}
             </Link>
           );
         })}
