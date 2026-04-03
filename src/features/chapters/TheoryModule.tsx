@@ -325,17 +325,54 @@ function SectionBlock({
 }
 
 function FormulasTab({ chapter }: { chapter: Chapter }) {
+  const { progress } = useAppStore();
+  const [showBookmarked, setShowBookmarked] = useState(false);
+
+  const bookmarkedIds = new Set(progress.bookmarkedFormulas);
+  const filtered = showBookmarked
+    ? chapter.formulas.filter(f => bookmarkedIds.has(f.id))
+    : chapter.formulas;
+  const bookmarkedCount = chapter.formulas.filter(f => bookmarkedIds.has(f.id)).length;
+
   return (
     <div className="space-y-4">
-      <h3 className="font-display font-semibold text-lg mb-2">📐 Công thức quan trọng</h3>
+      <div className="flex items-center justify-between flex-wrap gap-3">
+        <div>
+          <h3 className="font-display font-semibold text-lg">📐 Công thức</h3>
+          <p className="text-xs text-dark-400 mt-0.5">
+            {chapter.formulas.length} công thức • Chuẩn MathType / KaTeX
+          </p>
+        </div>
+        {bookmarkedCount > 0 && (
+          <button
+            onClick={() => setShowBookmarked(!showBookmarked)}
+            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+              showBookmarked
+                ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30'
+                : 'bg-white/5 text-dark-400 border border-white/10 hover:text-white'
+            }`}
+          >
+            ⭐ Đã đánh dấu ({bookmarkedCount})
+          </button>
+        )}
+      </div>
+
       {chapter.formulas.length === 0 ? (
         <p className="text-dark-400 text-center py-10">Thiếu dữ liệu nguồn</p>
+      ) : filtered.length === 0 ? (
+        <div className="text-center py-10">
+          <p className="text-2xl mb-2">☆</p>
+          <p className="text-dark-400 text-sm">Chưa đánh dấu công thức nào trong chương này.</p>
+        </div>
       ) : (
-        chapter.formulas.map((f) => <FormulaBlock key={f.id} formula={f} />)
+        <div className="space-y-4">
+          {filtered.map((f) => <FormulaBlock key={f.id} formula={f} />)}
+        </div>
       )}
     </div>
   );
 }
+
 
 function ExamplesTab({ chapter }: { chapter: Chapter }) {
   const [openExamples, setOpenExamples] = useState<Set<string>>(new Set());
