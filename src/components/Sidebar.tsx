@@ -126,7 +126,7 @@ export function Sidebar() {
               style={{
                 fontFamily: "'Outfit', sans-serif",
                 fontWeight: 800,
-                fontSize: '1rem',
+                fontSize: '0.95rem',
                 background: 'linear-gradient(135deg, #EBB83A, #F5D878)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
@@ -137,8 +137,11 @@ export function Sidebar() {
             >
               CƠ HỌC ĐẤT
             </h1>
-            <p style={{ fontSize: '0.6rem', color: 'rgba(176,187,204,0.55)', letterSpacing: '0.12em', marginTop: 2, fontWeight: 500 }}>
-              ĐH GIAO THÔNG VẬN TẢI
+            <p style={{ fontSize: '0.58rem', color: 'rgba(176,187,204,0.6)', letterSpacing: '0.1em', marginTop: 2, fontWeight: 600 }}>
+              TRƯỜNG ĐH GIAO THÔNG VẬN TẢI
+            </p>
+            <p style={{ fontSize: '0.55rem', color: 'rgba(212,160,23,0.6)', letterSpacing: '0.06em', marginTop: 1, fontWeight: 500 }}>
+              BỘ MÔN ĐỊA KỸ THUẬT · UTC
             </p>
           </div>
         )}

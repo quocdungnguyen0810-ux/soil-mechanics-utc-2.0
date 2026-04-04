@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Exercise } from '@/types';
+import { ContentRenderer } from '@/components/content/ContentRenderer';
 
 interface ExerciseCardProps {
   exercise: Exercise;
@@ -41,7 +42,7 @@ export function ExerciseCard({ exercise, index }: ExerciseCardProps) {
       </div>
 
       <div className="p-5 rounded-lg bg-white/[0.02] border border-white/5 mb-4 shadow-inner">
-        <p className="text-sm text-dark-100 leading-relaxed whitespace-pre-line text-lg">{exercise.prompt}</p>
+        <ContentRenderer content={exercise.prompt} />
       </div>
 
       <div className="flex gap-3 flex-wrap">
@@ -66,7 +67,7 @@ export function ExerciseCard({ exercise, index }: ExerciseCardProps) {
       {revealedHints && exercise.hint && (
         <div className="mt-4 p-4 rounded-lg bg-amber-500/10 border border-amber-500/30 animate-fade-in">
           <p className="text-sm font-bold text-amber-400 mb-2 flex items-center gap-2">💡 Gợi ý tư duy:</p>
-          <p className="text-sm text-amber-100 italic">{exercise.hint}</p>
+          <ContentRenderer content={exercise.hint} />
         </div>
       )}
 
@@ -74,11 +75,13 @@ export function ExerciseCard({ exercise, index }: ExerciseCardProps) {
       {revealedAnswers && exercise.answer && (
         <div className="mt-4 p-5 rounded-lg bg-emerald-500/10 border border-emerald-500/30 animate-fade-in">
           <p className="text-sm font-bold text-emerald-400 mb-2 flex items-center gap-2">📌 Đáp án cuối cùng:</p>
-          <p className="text-base text-white whitespace-pre-line font-medium bg-emerald-950/50 p-3 rounded">{exercise.answer}</p>
+          <div className="bg-emerald-950/50 p-3 rounded text-base font-medium">
+            <ContentRenderer content={exercise.answer!} />
+          </div>
           {exercise.explanation && (
             <div className="mt-3 pt-3 border-t border-emerald-500/20">
               <p className="text-xs text-emerald-300 font-medium mb-1">Giải thích vắn tắt:</p>
-              <p className="text-sm text-dark-300">{exercise.explanation}</p>
+              <ContentRenderer content={exercise.explanation} />
             </div>
           )}
         </div>
@@ -95,7 +98,7 @@ export function ExerciseCard({ exercise, index }: ExerciseCardProps) {
                   {stepIndex + 1}
                 </div>
                 <div className="text-sm text-dark-100 flex-1 pt-0.5 leading-relaxed bg-blue-950/20 px-3 py-2 rounded">
-                  {step}
+                  <ContentRenderer content={step} />
                 </div>
               </div>
             ))}

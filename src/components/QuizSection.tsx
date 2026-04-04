@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { Chapter, Quiz } from '@/types';
 import { useAppStore } from '@/store/useAppStore';
+import { ContentRenderer } from '@/components/content/ContentRenderer';
 
 interface Props {
   chapter: Chapter;
@@ -114,7 +115,9 @@ export function QuizSection({ chapter }: Props) {
         <div className="flex items-center gap-2 mb-3">
           <span className="badge-purple text-xs">{currentQuiz.type === 'multiple-choice' ? 'Trắc nghiệm' : currentQuiz.type === 'true-false' ? 'Đúng/Sai' : 'Tự luận'}</span>
         </div>
-        <p className="text-lg font-medium mb-6">{currentQuiz.question}</p>
+        <div className="mb-6">
+          <ContentRenderer content={currentQuiz.question} />
+        </div>
 
         {/* Options */}
         {currentQuiz.type === 'multiple-choice' && currentQuiz.options && (
@@ -134,7 +137,7 @@ export function QuizSection({ chapter }: Props) {
                   disabled={showResult}
                 >
                   <span className="font-medium text-dark-400 mr-2">{String.fromCharCode(65 + i)}.</span>
-                  {opt}
+                  <span style={{ flex: 1, textAlign: 'left' }}><ContentRenderer content={opt} /></span>
                 </button>
               );
             })}
@@ -180,9 +183,8 @@ export function QuizSection({ chapter }: Props) {
         {/* Explanation */}
         {showResult && currentQuiz.explanation && (
           <div className="p-3 rounded-lg bg-primary-600/10 border border-primary-600/20 mb-4 animate-fade-in">
-            <p className="text-sm text-primary-300">
-              <span className="font-medium">Giải thích:</span> {currentQuiz.explanation}
-            </p>
+            <p className="text-xs text-primary-400 font-semibold mb-1">Giải thích:</p>
+            <ContentRenderer content={currentQuiz.explanation} />
           </div>
         )}
 

@@ -3,19 +3,26 @@ import 'katex/dist/katex.min.css';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'Cơ Học Đất UTC | Ứng dụng học tập',
+  title: 'CƠ HỌC ĐẤT UTC | Trường ĐH Giao thông Vận tải',
   description:
-    'Ứng dụng học tập Cơ học đất - Trường Đại học Giao thông Vận tải. Lý thuyết, bài tập, thí nghiệm, báo cáo tự động.',
+    'Ứng dụng học tập CƠ HỌC ĐẤT — Trường Đại học Giao thông Vận tải · Bộ môn Địa Kỹ thuật. Lý thuyết, bài tập, thí nghiệm, báo cáo tự động.',
+  viewport: {
+    width: 'device-width',
+    initialScale: 1,
+    maximumScale: 1,
+    userScalable: false,
+  },
+  themeColor: '#111827',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="vi">
+    <html lang="vi" suppressHydrationWarning>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
       </head>
-      <body className="bg-dark-950 text-white antialiased">
+      <body className="bg-dark-950 text-white antialiased" suppressHydrationWarning>
         {/* Background decorations */}
         <div
           className="bg-glow"

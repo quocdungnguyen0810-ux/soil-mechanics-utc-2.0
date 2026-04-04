@@ -7,6 +7,7 @@ import {
   defaultExamConfig, examTemplates,
   generateExam, gradeExam,
 } from '@/lib/services/examGenerator';
+import { ContentRenderer } from '@/components/content/ContentRenderer';
 
 type ExamPhase = 'setup' | 'taking' | 'result';
 
@@ -287,7 +288,9 @@ export function ExamModule() {
               {q.type === 'true-false' && <span className="badge-green text-xs">Đúng/Sai</span>}
             </div>
 
-            <p className="text-lg text-white mb-6 leading-relaxed">{q.question}</p>
+            <div className="mb-6 text-base text-white leading-relaxed">
+              <ContentRenderer content={q.question} />
+            </div>
 
             {/* Options */}
             {q.type === 'multiple-choice' && q.options && (
@@ -303,7 +306,7 @@ export function ExamModule() {
                     }`}
                   >
                     <span className="font-semibold mr-2">{String.fromCharCode(65 + i)}.</span>
-                    {opt}
+                    <ContentRenderer content={opt} />
                   </button>
                 ))}
               </div>
@@ -398,7 +401,9 @@ export function ExamModule() {
                   <span className={isCorrect ? 'text-emerald-400' : 'text-red-400'}>{isCorrect ? '✅' : '❌'}</span>
                   <span className="badge-blue text-xs">{q.difficulty}</span>
                 </div>
-                <p className="text-sm text-white mb-2">{q.question}</p>
+                <div className="mb-2 text-sm text-white">
+                  <ContentRenderer content={q.question} />
+                </div>
                 <div className="text-xs space-y-1">
                   {!isCorrect && userAns && (
                     <p className="text-red-300">Bạn chọn: {userAns}</p>

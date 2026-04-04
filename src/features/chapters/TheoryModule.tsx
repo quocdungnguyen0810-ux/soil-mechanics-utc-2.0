@@ -494,8 +494,8 @@ function ExamplesTab({ chapter }: { chapter: Chapter }) {
         <div key={ex.id} className="glass-card">
           <h4 className="font-semibold mb-2">{ex.title}</h4>
           <div className="p-3 rounded-lg bg-white/[0.02] border border-white/5 mb-3">
-            <p className="text-sm font-medium text-primary-300 mb-1">Đề bài:</p>
-            <p className="text-sm text-dark-200 whitespace-pre-line">{ex.problem}</p>
+            <p className="text-sm font-medium text-primary-300 mb-2">Đề bài:</p>
+            <ContentRenderer content={ex.problem} />
           </div>
           <button onClick={() => toggle(ex.id)} className="btn-secondary text-sm">
             {openExamples.has(ex.id) ? '▾ Ẩn lời giải' : '▸ Xem lời giải'}
@@ -503,18 +503,16 @@ function ExamplesTab({ chapter }: { chapter: Chapter }) {
           {openExamples.has(ex.id) && (
             <div className="mt-4 animate-fade-in">
               <p className="text-sm font-medium text-emerald-400 mb-2">Lời giải:</p>
-              <ol className="space-y-1.5">
+              <ol className="space-y-2">
                 {ex.steps.map((step, i) => (
                   <li key={i} className="text-sm text-dark-200 flex gap-2">
-                    <span className="text-primary-400 font-mono text-xs mt-0.5">
-                      {i + 1}.
-                    </span>
-                    {step}
+                    <span className="text-primary-400 font-mono text-xs mt-0.5 shrink-0">{i + 1}.</span>
+                    <ContentRenderer content={step} />
                   </li>
                 ))}
               </ol>
               <div className="mt-3 p-3 rounded-lg bg-emerald-500/5 border border-emerald-500/20">
-                <p className="text-sm text-dark-200 whitespace-pre-line">{ex.solution}</p>
+                <ContentRenderer content={ex.solution} />
               </div>
             </div>
           )}

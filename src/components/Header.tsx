@@ -44,7 +44,7 @@ export function Header() {
 
   return (
     <header
-      className="h-16 flex items-center justify-between px-6 no-print"
+      className="h-14 sm:h-16 flex items-center justify-between px-3 sm:px-6 no-print"
       style={{
         background: 'linear-gradient(135deg, rgba(24,35,56,0.96), rgba(17,24,39,0.98))',
         borderBottom: '1px solid rgba(212,160,23,0.1)',
@@ -74,8 +74,8 @@ export function Header() {
         </div>
       </div>
 
-      {/* Center: search */}
-      <div className="flex-1 max-w-xs mx-6 hidden md:block">
+      {/* Center: search — hidden on mobile */}
+      <div className="flex-1 max-w-xs mx-4 hidden lg:block">
         <div className="relative">
           <input
             type="text"
